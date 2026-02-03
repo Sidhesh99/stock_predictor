@@ -37,9 +37,5 @@ Thumbs.db
 models/*.h5
 models/*.pkl
 
-# Data
-*.csv
-*.xlsx
-
 # Conda
 .conda/

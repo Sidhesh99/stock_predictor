@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSTM Stock Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📈 LSTM Stock Price Predictor</h1>
+            <p>Deep Learning-based Next-Day Price Prediction</p>
+        </header>
+
+        <!-- INPUT SECTION -->
+        <div class="input-section">
+            <div class="input-group">
+                <label for="stock">Select Stock:</label>
+                <select id="stock">
+                    {% for s in stocks %}
+                    <option value="{{ s }}">{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="start_date">From:</label>
+                <input type="date" id="start_date" value="2022-01-01">
+            </div>
+
+            <div class="input-group">
+                <label for="end_date">To:</label>
+                <input type="date" id="end_date" value="2025-01-01">
+            </div>
+
+            <button id="predictBtn" onclick="makePrediction()">Predict</button>
+        </div>
+
+        <!-- LOADING -->
+        <div id="loading" class="loading" style="display:none;">
+            <div class="spinner"></div>
+            <p>Training LSTM model … please wait</p>
+        </div>
+
+        <!-- ERROR -->
+        <div id="error" class="error" style="display:none;"></div>
+
+        <!-- CHART -->
+        <div id="chartSection" class="chart-section" style="display:none;">
+            <h2>📊 Price Chart – <span id="chartTitle">RELIANCE</span></h2>
+            <canvas id="priceChart"></canvas>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="results" class="results-section" style="display:none;">
+            <div class="result-card">
+                <div class="result-row">
+                    <span class="label">Current Price</span>
+                    <span class="value" id="currentPrice">₹0.00</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">Predicted Price</span>
+                    <span class="value highlight" id="predictedPrice">₹0.00</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">Expected Change</span>
+                    <span class="value" id="priceChange">+0.0%</span>
+                </div>
+            </div>
+
+            <div class="decision-card">
+                <div class="decision-header">
+                    <span class="label">Prediction</span>
+                    <span class="decision" id="decision">HOLD</span>
+                </div>
+                <div class="confidence-row">
+                    <span class="label">Confidence</span>
+                    <span class="confidence" id="confidence">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Powered by LSTM Neural Networks | Historical data (2020–2025)</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

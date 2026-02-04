@@ -32,12 +32,11 @@ class StockPredictor:
         self.scaler = MinMaxScaler(feature_range=(0, 1))
 
     def _build_model(self, input_shape):
+        # Lighter model for Render's free tier (512 MB RAM)
         model = Sequential([
-            LSTM(50, return_sequences=True, input_shape=input_shape),
+            LSTM(25, return_sequences=False, input_shape=input_shape),
             Dropout(0.2),
-            LSTM(50, return_sequences=False),
-            Dropout(0.2),
-            Dense(25, activation='relu'),
+            Dense(10, activation='relu'),
             Dense(1)
         ])
         model.compile(optimizer='adam', loss='mean_squared_error')
@@ -69,7 +68,8 @@ class StockPredictor:
             return None, "Not enough data after sequence creation. Widen the date range."
 
         model = self._build_model((LOOKBACK, 1))
-        model.fit(X, y, epochs=10, batch_size=32, verbose=0)
+        # Reduced epochs and batch size for faster training + less memory
+        model.fit(X, y, epochs=5, batch_size=16, verbose=0)
 
         last_seq        = scaled[-LOOKBACK:].reshape(1, LOOKBACK, 1)
         pred_scaled     = model.predict(last_seq, verbose=0)
